@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NEET Motivation Hub with Working Tabs</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto:wght@400;700&display=swap');
+    body {
+      margin: 0; padding: 20px;
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #d0f0fd, #6cb2e8);
+      color: #232434; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    header {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.6rem;
+      color: #1a5276;
+      text-shadow: 2px 2px 12px #82c0ff;
+      margin-bottom: 0.7em;
+      text-align: center;
+      line-height: 1.1;
+      z-index: 10;
+      position: relative;
+    }
+    nav {
+      margin-bottom: 20px; 
+      display: flex; flex-wrap: wrap; justify-content: center;
+      z-index: 10;
+      position: relative;
+    }
+    nav button {
+      background: #3498db; color: #fff; border: none; padding: 10px 20px; margin: 3px;
+      font-size: 1rem; font-weight: bold; border-radius: 10px; cursor: pointer;
+      transition: 0.3s; box-shadow: 0 2px 6px #bad7ea45;
+      letter-spacing: 0.03em;
+    }
+    nav button.activeTab,
+    nav button:hover {
+      background: #1a5276;
+    }
+    /* Container for tab content with AIIMS backgrounds */
+    .page {
+      display: none; 
+      opacity: 0; 
+      transform: translateY(15px);
+      max-width: 850px; 
+      width: 100%; 
+      margin-bottom: 20px;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      box-shadow: 0 8px 24px rgba(81, 162, 226, 0.28);
+      color: #232434;
+    }
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    /* Background image for each page */
+    .page-bg {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-size: cover;
+      background-position: center center;
+      filter: brightness(0.6);
+      z-index: 0;
+      transition: background-image 0.7s ease-in-out;
+    }
+    /* Content wrapper with white translucent background */
+    .page-content {
+      position: relative;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 26px 20px 22px;
+      border-radius: 15px;
+      box-sizing: border-box;
+      z-index: 1;
+      color: #232434;
+      min-height: 320px;
+    }
+
+    .big-quote {
+      font-family: 'Pacifico', cursive;
+      font-size: 2.1rem;
+      color: #1a5276;
+      line-height: 1.3;
+      text-align: center;
+      padding: 20px 25px 10px;
+      margin-bottom: 20px;
+      border-left: 6px solid #6cb2e8;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px #bad7ea28;
+      background: #eef9ff;
+    }
+    .big-quote .author {
+      font-family: 'Roboto', sans-serif;
+      font-size: 1rem;
+      color: #16a085;
+      font-style: italic;
+      margin-top: 6px;
+      display: block;
+    }
+    .tip-section h2 {
+      margin-top: 0;
+      font-size: 1.3rem;
+      color: #0a5886;
+      margin-bottom: 12px;
+      letter-spacing: 0.01em;
+    }
+    .tip-list {
+      margin: 0;
+      padding: 0 0 8px 0;
+      list-style: disc inside;
+      color: #244c62; 
+      font-size: 1.09rem;
+    }
+    .tip-list li {
+      margin-bottom: 10px;
+    }
+    table {
+      width: 100%; 
+      border-collapse: collapse; 
+      margin: 20px 0 10px 0; 
+      color: #234f7a;
+      font-size: 1.02rem;
+    }
+    th, td {
+      border: 2px solid #abd1ef;
+      padding: 8px 10px;
+      text-align: center;
+      background: rgba(255 255 255 / 0.85);
+    }
+    th {
+      background: #3498db;
+      color: #fff;
+    }
+    .download-link {
+      display: inline-block;
+      margin: 8px 0;
+      padding: 11px 16px;
+      border: 2px solid #187bcd;
+      color: #187bcd;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 700;
+      background: #eef6fd;
+      transition: 0.2s;
+    }
+    .download-link:hover {
+      background: #3498db;
+      color: #fff;
+    }
+    footer {
+      margin-top: auto;
+      font-style: italic;
+      padding: 18px 8px 6px;
+      color: #4c7ea4;
+      font-weight: 600;
+      text-align: center;
+      position: relative;
+      z-index: 10;
+    }
+    @media (max-width: 700px) {
+      .page-content {padding: 18px 4vw;}
+      nav button {padding: 8px 6vw;}
+      header {font-size: 2rem;}
+      .big-quote {font-size: 1.22rem;}
+    }
+  </style>
+</head>
+<body>
+<header>NEET Motivation Hub</header>
+
+<nav>
+  <button onclick="showPage('home')" id="tab-home" class="activeTab">🏠 Home</button>
+  <button onclick="showPage('biology')" id="tab-biology">🧬 Biology</button>
+  <button onclick="showPage('physics')" id="tab-physics">🔬 Physics</button>
+  <button onclick="showPage('chemistry')" id="tab-chemistry">⚗️ Chemistry</button>
+  <button onclick="showPage('tips')" id="tab-tips">📚 Exam Prep Tips</button>
+  <button onclick="showPage('timetable')" id="tab-timetable">🗓 Timetable</button>
+  <button onclick="showPage('revision')" id="tab-revision">🔄 Revision</button>
+  <button onclick="showPage('motivation')" id="tab-motivation">💪 Motivation</button>
+  <button onclick="showPage('download')" id="tab-download">📥 Planners</button>
+  <button onclick="showPage('exam')" id="tab-exam">📝 Exam Day</button>
+</nav>
+
+<script>
+  // AIIMS images assigned to tabs
+  const aiimsImages = {
+    home: 'https://upload.wikimedia.org/wikipedia/commons/4/48/AIIMS_New_Delhi_Main_Building.jpg',
+    biology: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/New_AIIMS_Biotissue_Laboratory_Image.jpg/1024px-New_AIIMS_Biotissue_Laboratory_Image.jpg',
+    physics: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Medical_Equipment_AIIMS_Delhi.JPG',
+    chemistry: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Chemical_Lab_AIIMS_Delhi.jpg',
+    tips: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/AIIMS_New_Delhi_entrance.jpg',
+    timetable: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Aims_Delhi_lecture_hall.jpg',
+    revision: 'https://upload.wikimedia.org/wikipedia/commons/3/36/AIIMS_Delhi_Database_Image.jpg',
+    motivation: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/AIIMS_Delhi_Ward.jpg',
+    download: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/AIIMS_New_Delhi_Drone_Shot.jpg',
+    exam: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/AIIMS_Delhi_Main_Entrance_Overview.jpg'
+  };
+
+  const bigQuotes = [
+    `&#8220;The future belongs to those who believe in the beauty of their dreams.&#8221; <span class="author">— Eleanor Roosevelt</span><br>Your hard work, persistence, and belief will be the keys to unlocking your medical career. NEET is not just an exam, it's your gateway to a life of purpose and healing.`,
+    `&#8220;Every mountain top is within reach if you just keep climbing.&#8221; <span class="author">— Barry Finlay</span><br>Each chapter of NCERT mastered brings you closer to your white coat dream!`,
+    `&#8220;Success is the sum of small efforts, repeated day in and day out.&#8221; <span class="author">— Robert Collier</span><br>Every solved numerical is a step closer to your 150+ in Physics!`,
+    `&#8220;Dreams don't work unless you do.&#8221; <span class="author">— John Maxwell</span><br>Each time you crack a reaction, you’re building a path to AIIMS!`,
+    `&#8220;Doubt kills more dreams than failure ever will.&#8221; <span class="author">— Suzy Kassem</span><br>Trust your plan, trust yourself. Consistent hard work wins.`,
+    `&#8220;Discipline is the bridge between goals and accomplishment.&#8221; <span class="author">— Jim Rohn</span><br>Invest every hour wisely and watch the results unfold!`,
+    `&#8220;Don’t practice until you get it right. Practice until you can’t get it wrong.&#8221; <span class="author">— Unknown</span><br>Every minute of revision counts!`,
+    `&#8220;It always seems impossible until it's done.&#8221; <span class="author">— Nelson Mandela</span><br>If others did it, so can YOU!`,
+    `&#8220;A goal without a plan is just a wish.&#8221; <span class="author">— Antoine de Saint‑Exupéry</span><br>Print your plan, make it happen!`,
+    `&#8220;Stay calm and trust yourself. You know the answers.&#8221; <span class="author">— Exam Day Wisdom</span><br>Your preparation is your power—shine with confidence!`
+  ];
+
+  const pageOrder = [
+    'home','biology','physics','chemistry','tips','timetable','revision','motivation','download','exam'
+  ];
+
+  function showPage(id) {
+    // Hide pages
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    // Show current page
+    const page = document.getElementById(id);
+    page.classList.add('active');
+
+    // Highlight active tab
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('activeTab'));
+    document.getElementById('tab-' + id).classList.add('activeTab');
+
+    // Set big quote
+    const idx = pageOrder.indexOf(id);
+    const quoteId = (id === 'home') ? 'main-quote' : `quote-${id}`;
+    if(document.getElementById(quoteId)) {
+      document.getElementById(quoteId).innerHTML = bigQuotes[idx];
+    }
+
+    // Set background images and hide others
+    pageOrder.forEach(key => {
+      const bgDiv = document.getElementById('bg-' + key);
+      if(bgDiv) {
+        bgDiv.style.backgroundImage = (key === id) ? `url('${aiimsImages[key]}')` : 'none';
+      }      
+    });
+  }
+
+  // Create background divs dynamically and append to each page (for performance & simpler HTML)
+  document.addEventListener('DOMContentLoaded', () => {
+    pageOrder.forEach(key => {
+      const pageElement = document.getElementById(key);
+      if(pageElement) {
+        const bg = document.createElement('div');
+        bg.className = 'page-bg';
+        bg.id = 'bg-' + key;
+        pageElement.prepend(bg);
+
+        // Wrap existing child nodes except the background div in a content div
+        let contentWrapper = document.createElement('div');
+        contentWrapper.className = 'page-content';
+        while (pageElement.childNodes.length > 1) {
+          contentWrapper.appendChild(pageElement.childNodes[1]);
+        }
+        pageElement.appendChild(contentWrapper);
+      }
+    });
+    showPage('home');
+  });
+</script>
+
+<!-- Page content placeholders -->
+<div id="home" class="page">
+  <div class="big-quote" id="main-quote"></div>
+  <p style="text-align:center; font-size:1.1rem;">
+    Welcome! Use the menu above to access the most focused NEET strategies, subject wisdom, and a planner to keep you on track for your <b>600+ score</b>.
+  </p>
+</div>
+
+<div id="biology" class="page">
+  <div class="big-quote" id="quote-biology"></div>
+  <div class="tip-section">
+    <h2>Biology: Score Booster Essentials</h2>
+    <ul class="tip-list">
+      <li>Focus <b>90% on mastering NCERT</b>. It is the direct source for most NEET Biology questions!</li>
+      <li>Draw and label diagrams yourself; you learn twice—by seeing and doing.</li>
+      <li>Try to <b>teach</b> a tough Biology concept in your own words; if you can't, revisit it.</li>
+      <li>Solve all last 10 years’ NEET Bio questions—identify recurring patterns.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="physics" class="page">
+  <div class="big-quote" id="quote-physics"></div>
+  <div class="tip-section">
+    <h2>Physics: Clear Concepts, Ace Numericals</h2>
+    <ul class="tip-list">
+      <li>Don’t memorize—first <b>understand the principle</b> behind each formula.</li>
+      <li>Daily practice: Solve at least 20 problems from current & previous chapters.</li>
+      <li>Keep a <b>summary sheet</b> for all key formulas—revise it every week.</li>
+      <li>Mark errors in a “mistakes diary” and re-solve them at end of week.</li>
+      <li>Time yourself when solving previous years’ Physics papers.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="chemistry" class="page">
+  <div class="big-quote" id="quote-chemistry"></div>
+  <div class="tip-section">
+    <h2>Chemistry: Organic, Inorganic & Physical</h2>
+    <ul class="tip-list">
+      <li>Organic: Draw mechanisms step-by-step to clarify logic, not just outcomes.</li>
+      <li>Inorganic: Summarize reactions and <b>memorize from NCERT tables</b>.</li>
+      <li>Physical: Practice a mix of theory & calculations for each topic, then take up NEET-level MCQs.</li>
+      <li>Revisit frequently asked NEET chemistry topics—do daily “quick quizzes.”</li>
+    </ul>
+  </div>
+</div>
+
+<div id="tips" class="page">
+  <div class="big-quote" id="quote-tips"></div>
+  <div class="tip-section">
+    <h2>NEET Exam Prep: Pro Tips for 600+</h2>
+    <ul class="tip-list">
+      <li>Create and follow a realistic, consistent daily plan—don’t fall for “burnout” marathons.</li>
+      <li>Prioritize <b>understanding over cramming</b>; deep learning lasts, cramming crashes.</li>
+      <li>After every topic, solve at least 40 MCQs before moving on.</li>
+      <li>Analyze your mock test mistakes; write down why you went wrong to avoid repeats.</li>
+      <li>Group study can help clear doubts, but don’t let it become a distraction.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="timetable" class="page">
+  <div class="big-quote" id="quote-timetable"></div>
+  <h2 style="margin-bottom:6px;">Highly Effective Full-Day Timetable</h2>
+  <h3 style="margin-bottom:5px;">6 AM – 1 PM: Classes / Coaching</h3>
+  <table>
+    <tr><th>Time</th><th>What to do</th></tr>
+    <tr><td>6:00-7:00</td><td>Exercise, meditate, and light breakfast</td></tr>
+    <tr><td>7:00-1:00</td><td>Coaching/school classes (max focus!) + note down doubts</td></tr>
+  </table>
+  <h3 style="margin-top:15px; margin-bottom:5px;">1 PM – 6 AM: Smart Self-Study</h3>
+  <table>
+    <tr><td>1:00-2:00 PM</td><td>Lunch & de-stress</td></tr>
+    <tr><td>2:00-3:30 PM</td><td>Biology revision & questions</td></tr>
+    <tr><td>3:45-5:00 PM</td><td>Physics problem practice</td></tr>
+    <tr><td>5:00-6:00 PM</td><td>Chemistry (organic/inorganic)</td></tr>
+    <tr><td>6:00-6:30 PM</td><td>Physical activity break</td></tr>
+    <tr><td>6:30-7:30 PM</td><td>MCQ & past paper session (mixed subjects)</td></tr>
+    <tr><td>7:30-8:00 PM</td><td>Dinner & family time</td></tr>
+    <tr><td>8:00-9:00 PM</td><td>Formula and diagram review + doubt-solving</td></tr>
+    <tr><td>9:00-9:30 PM</td><td>Flashcards, quick quizzes</td></tr>
+    <tr><td>9:30-10:00 PM</td><td>Plan and visualize tomorrow’s goals</td></tr>
+    <tr><td>10:00 PM-6:00 AM</td><td>SLEEP (recover to remember!)</td></tr>
+  </table>
+</div>
+
+<div id="revision" class="page">
+  <div class="big-quote" id="quote-revision"></div>
+  <div class="tip-section">
+    <h2>Revision: Make It Stick</h2>
+    <ul class="tip-list">
+      <li>Revise daily: revisit notes each night—even 10 minutes helps memory stick.</li>
+      <li><b>Space out</b> (don't cram): review chapters again after 2, 7, and 21 days.</li>
+      <li>Use <b>active recall</b> (cover, answer, check), not just re-reading.</li>
+      <li>Do at least 1 full NEET mock weekly—treat it as your final exam.</li>
+      <li>Keep a “last 5-minute” list for formula/diagram flash review before bedtime & exam day.</li>
+    </ul>
+  </div>
+</div>
+
+<div id="motivation" class="page">
+  <div class="big-quote" id="quote-motivation"></div>
+  <p style="font-size:1.19rem;line-height:1.5;text-align:center;">
+    <b>Your dedication and grit will turn your dreams into your MBBS reality.<br>
+    Never compare your journey to others—you are your own best competitor!</b>
+  </p>
+</div>
+
+<div id="download" class="page">
+  <div class="big-quote" id="quote-download"></div>
+  <div class="page-content-inner">
+    <h2>Download Your NEET Planners:</h2>
+    <a class="download-link" href="#" target="_blank" rel="noopener">📄 Daily Planner</a><br>
+    <a class="download-link" href="#" target="_blank" rel="noopener">🗓 Weekly Timetable</a>
+    <p style="color:#888;font-size:0.97rem;">(Tip: Print these out and keep at your desk!)</p>
+  </div>
+</div>
+
+<div id="exam" class="page">
+  <div class="big-quote" id="quote-exam"></div>
+  <div class="tip-section">
+    <h2>Exam Day: Big Score, Calm Mind</h2>
+    <ul class="tip-list">
+      <li>Sleep 7–8 hours the night before—fatigue is your enemy, not the exam.</li>
+      <li>Pack your admit card, ID, pens, water, and extra mask in advance.</li>
+      <li>Reach the center early—no last-minute stress.</li>
+      <li>Scan the full question paper first, then start with your strongest subject.</li>
+      <li>Don’t rush—mark tough questions, come back after your first sweep.</li>
+      <li>If stuck, close eyes and take 2 deep breaths—you know more than you think.</li>
+      <li>Keep positive self-talk (“I’ve prepared for this—I can do this!”)</li>
+    </ul>
+  </div>
+</div>
+
+<footer>
+  Made with ❤️ for NEET Aspirants — Your best life starts NOW!
+</footer>
+
+<script>
+  const pageOrder = [
+    'home','biology','physics','chemistry','tips','timetable','revision','motivation','download','exam'
+  ];
+
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('activeTab'));
+    document.getElementById('tab-' + id).classList.add('activeTab');
+
+    const idx = pageOrder.indexOf(id);
+    const bigQuotes = [
+      `&#8220;The future belongs to those who believe in the beauty of their dreams.&#8221; <span class="author">— Eleanor Roosevelt</span><br>Your hard work, persistence, and belief will be the keys to unlocking your medical career. NEET is not just an exam, it's your gateway to a life of purpose and healing.`,
+      `&#8220;Every mountain top is within reach if you just keep climbing.&#8221; <span class="author">— Barry Finlay</span><br>Each chapter of NCERT mastered brings you closer to your white coat dream!`,
+      `&#8220;Success is the sum of small efforts, repeated day in and day out.&#8221; <span class="author">— Robert Collier</span><br>Every solved numerical is a step closer to your 150+ in Physics!`,
+      `&#8220;Dreams don't work unless you do.&#8221; <span class="author">— John Maxwell</span><br>Each time you crack a reaction, you’re building a path to AIIMS!`,
+      `&#8220;Doubt kills more dreams than failure ever will.&#8221; <span class="author">— Suzy Kassem</span><br>Trust your plan, trust yourself. Consistent hard work wins.`,
+      `&#8220;Discipline is the bridge between goals and accomplishment.&#8221; <span class="author">— Jim Rohn</span><br>Invest every hour wisely and watch the results unfold!`,
+      `&#8220;Don’t practice until you get it right. Practice until you can’t get it wrong.&#8221; <span class="author">— Unknown</span><br>Every minute of revision counts!`,
+      `&#8220;It always seems impossible until it's done.&#8221; <span class="author">— Nelson Mandela</span><br>If others did it, so can YOU!`,
+      `&#8220;A goal without a plan is just a wish.&#8221; <span class="author">— Antoine de Saint‑Exupéry</span><br>Print your plan, make it happen!`,
+      `&#8220;Stay calm and trust yourself. You know the answers.&#8221; <span class="author">— Exam Day Wisdom</span><br>Your preparation is your power—shine with confidence!`
+    ];
+
+    // Set quote in the tab's big quote container
+    const qId = id === 'home' ? 'main-quote' : `quote-${id}`;
+    const qElem = document.getElementById(qId);
+    if(qElem) qElem.innerHTML = bigQuotes[idx];
+
+    // Manage backgrounds
+    const aiimsImages = {
+      home: 'https://upload.wikimedia.org/wikipedia/commons/4/48/AIIMS_New_Delhi_Main_Building.jpg',
+      biology: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/New_AIIMS_Biotissue_Laboratory_Image.jpg/1024px-New_AIIMS_Biotissue_Laboratory_Image.jpg',
+      physics: 'https://upload.wikimedia.org/wikipedia/commons/2/2d/Medical_Equipment_AIIMS_Delhi.JPG',
+      chemistry: 'https://upload.wikimedia.org/wikipedia/commons/4/43/Chemical_Lab_AIIMS_Delhi.jpg',
+      tips: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/AIIMS_New_Delhi_entrance.jpg',
+      timetable: 'https://upload.wikimedia.org/wikipedia/commons/9/96/Aims_Delhi_lecture_hall.jpg',
+      revision: 'https://upload.wikimedia.org/wikipedia/commons/3/36/AIIMS_Delhi_Database_Image.jpg',
+      motivation: 'https://upload.wikimedia.org/wikipedia/commons/f/fc/AIIMS_Delhi_Ward.jpg',
+      download: 'https://upload.wikimedia.org/wikipedia/commons/0/0b/AIIMS_New_Delhi_Drone_Shot.jpg',
+      exam: 'https://upload.wikimedia.org/wikipedia/commons/b/b7/AIIMS_Delhi_Main_Entrance_Overview.jpg'
+    };
+
+    pageOrder.forEach(k => {
+      const bg = document.getElementById('bg-'+k);
+      if(bg) {
+        bg.style.backgroundImage = (k === id) ? `url('${aiimsImages[k]}')` : 'none';
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const pageOrder = ['home','biology','physics','chemistry','tips','timetable','revision','motivation','download','exam'];
+    pageOrder.forEach(key => {
+      const page = document.getElementById(key);
+      if(page) {
+        // Create background div
+        let bgDiv = document.createElement('div');
+        bgDiv.className = 'page-bg';
+        bgDiv.id = 'bg-' + key;
+        page.prepend(bgDiv);
+
+        // Wrap all children except the first background div inside 'page-content'
+        let contentWrapper = document.createElement('div');
+        contentWrapper.className = 'page-content';
+        // Move all from index 1 onwards to the wrapper (because bgDiv is first)
+        while(page.childNodes.length > 1) {
+          contentWrapper.appendChild(page.childNodes[1]);
+        }
+        page.appendChild(contentWrapper);
+      }
+    });
+    // Show the default page:
+    showPage('home');
+  });
+</script>
+
+</body>
+</html>
